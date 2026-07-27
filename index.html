@@ -62,6 +62,17 @@
   .hero .ring .num b{font-size:46px;font-weight:900;line-height:1;}
   .hero .ring .num span{font-size:13px;opacity:.85;margin-top:2px;}
   .hero .hint{margin-top:10px;font-size:13px;font-weight:600;color:#E4F7EC;background:rgba(255,255,255,.12);padding:7px 14px;border-radius:14px;}
+  .hero-body{display:flex;align-items:center;justify-content:center;gap:22px;width:100%;margin-top:4px;}
+  .hero-plant{display:flex;flex-direction:column;align-items:center;gap:6px;}
+  .hero-plant .plant-stage{width:104px;height:104px;border-radius:26px;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.12);}
+  .hero-plant .plant-stage svg{width:74px;height:74px;}
+  .hero-plant .plant-pair{display:flex;align-items:center;gap:10px;}
+  .hero-plant .plant-next{width:72px;height:72px;border-radius:20px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;filter:grayscale(1);opacity:.65;}
+  .hero-plant .plant-next svg{width:50px;height:50px;}
+  .hero-plant .plant-name{font-size:15px;font-weight:700;color:#fff;}
+  .hero-plant .plant-sub{font-size:11px;color:#E4F7EC;}
+  .wx-tip{font-size:12px;color:var(--muted);line-height:1.5;background:#F8F4EC;border-radius:10px;padding:9px 12px;}
+  @media(max-width:480px){.hero-body{flex-direction:column;gap:10px;}.hero-plant .plant-stage{width:92px;height:92px;}}
   /* ---- grid ---- */
   .grid{display:grid;grid-template-columns:1fr;gap:18px;}
   @media(min-width:760px){
@@ -175,12 +186,22 @@
         <div class="h-label">本月幸福指数</div>
         <div class="badge" id="deltaBadge">较上月 +0</div>
       </div>
-      <div class="ring">
-        <svg viewBox="0 0 180 180" fill="none">
-          <circle cx="90" cy="90" r="74" stroke="#fff" stroke-opacity="0.25" stroke-width="14"/>
-          <circle id="ringFg" cx="90" cy="90" r="74" stroke="#fff" stroke-width="14" stroke-linecap="round" transform="rotate(-90 90 90)"/>
-        </svg>
-        <div class="num"><b id="idxNum">0</b><span>/ 100</span></div>
+      <div class="hero-body">
+        <div class="ring">
+          <svg viewBox="0 0 180 180" fill="none">
+            <circle cx="90" cy="90" r="74" stroke="#fff" stroke-opacity="0.25" stroke-width="14"/>
+            <circle id="ringFg" cx="90" cy="90" r="74" stroke="#fff" stroke-width="14" stroke-linecap="round" transform="rotate(-90 90 90)"/>
+          </svg>
+          <div class="num"><b id="idxNum">0</b><span>/ 100</span></div>
+        </div>
+        <div class="hero-plant">
+          <div class="plant-pair">
+            <div class="plant-stage" id="heroPlant"></div>
+            <div class="plant-next" id="heroPlantNext"></div>
+          </div>
+          <div class="plant-name" id="heroPlantName">—</div>
+          <div class="plant-sub" id="heroPlantSub">当前状态</div>
+        </div>
       </div>
       <div class="hint" id="unlockHint">—</div>
     </div>
@@ -240,33 +261,24 @@
         <div class="card wx-card">
           <div class="wx-top">
             <div class="wx-ico"><svg viewBox="0 0 24 24" fill="#fff" width="24" height="24"><path d="M9 4C5.1 4 2 6.6 2 9.8c0 1.9 1 3.5 2.7 4.7L4 16.5l2.5-1.3c.8.2 1.6.3 2.5.3h.6a5 5 0 0 1-.2-1.3c0-3 2.9-5.4 6.5-5.4h.6C15.6 6.3 12.6 4 9 4z"/><path d="M22 14.5c0-2.6-2.6-4.7-5.8-4.7s-5.8 2.1-5.8 4.7 2.6 4.7 5.8 4.7c.7 0 1.4-.1 2-.3l1.9 1-.5-1.6c1.5-.9 2.4-2.2 2.4-3.8z"/></svg></div>
-            <div class="t"><b>微信帐单同步</b><span>关联后自动归类收入与支出</span></div>
+            <div class="t"><b>微信帐单同步</b><span>导出 CSV，上传即自动归类</span></div>
             <div class="wx-status" id="wxStatus">未连接</div>
           </div>
-          <button class="wx-btn" id="wxBtn" onclick="connectWechat()">立即连接微信帐单</button>
+          <button class="wx-btn" id="wxBtn" onclick="document.getElementById('billFile').click()">上传微信帐单 CSV</button>
+          <input id="billFile" type="file" accept=".csv,.CSV,.xls,.xlsx,text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" style="display:none" onchange="importBill(this)" />
+          <div class="wx-tip">微信支付 → 钱包 → 账单 → 导出帐单，下载 CSV 后在此上传，自动按收入/支出归类。</div>
         </div>
       </div>
     </div>
 
     <!-- RIGHT COLUMN -->
     <div class="col">
-      <!-- plant -->
-      <div class="section">
-        <div class="card">
-          <div class="sec-head" style="margin-bottom:14px;">
-            <div class="sec-title">我的小植物</div>
-            <div style="font-size:13px;font-weight:600;color:var(--green);" id="plantStageTxt">当前 · —</div>
-          </div>
-          <div class="plant-row" id="plantRow"></div>
-        </div>
-      </div>
-
       <!-- advice -->
       <div class="section">
         <div class="card">
           <div class="sec-head" style="margin-bottom:14px;">
             <div class="sec-title">本月建议与鼓励</div>
-            <div style="font-size:13px;color:var(--muted);">7月</div>
+            <div style="font-size:13px;color:var(--muted);" id="advMonth">7月</div>
           </div>
           <div class="enc"><svg viewBox="0 0 24 24" fill="none" stroke="#2BB673" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg><p id="encTxt">—</p></div>
           <div id="sugList"></div>
@@ -303,10 +315,12 @@ const PLANTS = {
   seed:{nm:'种子',sub:'起始',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><path d="M24 33c-2 0-3-1.5-3-3 1.6 0 3 1.4 3 3z" fill="#C9BFB0"/><path d="M24 33c2 0 3-1.5 3-3-1.6 0-3 1.4-3 3z" fill="#C9BFB0"/></svg>`},
   sprout:{nm:'嫩芽',sub:'60 分',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><path d="M24 33V20" stroke="#2BB673" stroke-width="2.4" stroke-linecap="round"/><path d="M24 26c-5-1-8-4-8-8 4 0 8 3 8 8z" fill="#2BB673"/><path d="M24 23c5-1 8-4 8-8-4 0-8 3-8 8z" fill="#2BB673"/></svg>`},
   potted:{nm:'小盆栽',sub:'75 分',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><path d="M24 33V18" stroke="#2BB673" stroke-width="2.4" stroke-linecap="round"/><path d="M24 24c-6-1-9-5-9-10 5 0 9 4 9 10z" fill="#2BB673"/><path d="M24 20c6-1 9-5 9-10-5 0-9 4-9 10z" fill="#2BB673"/><path d="M24 28c-4 0-6-3-6-6 3 0 6 2 6 6z" fill="#2BB673"/><path d="M24 28c4 0 6-3 6-6-3 0-6 2-6 6z" fill="#2BB673"/></svg>`},
-  bloom:{nm:'开花',sub:'90 分',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><path d="M24 33V16" stroke="#2BB673" stroke-width="2.4" stroke-linecap="round"/><path d="M24 23c-6-1-9-5-9-10 5 0 9 4 9 10z" fill="#2BB673"/><path d="M24 19c6-1 9-5 9-10-5 0-9 4-9 10z" fill="#2BB673"/><circle cx="15" cy="13" r="3" fill="#F6B042"/><circle cx="33" cy="9" r="3" fill="#F6B042"/><circle cx="24" cy="7" r="3" fill="#F6B042"/></svg>`}
+  bloom:{nm:'开花',sub:'90 分',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><path d="M24 33V16" stroke="#2BB673" stroke-width="2.4" stroke-linecap="round"/><path d="M24 23c-6-1-9-5-9-10 5 0 9 4 9 10z" fill="#2BB673"/><path d="M24 19c6-1 9-5 9-10-5 0-9 4-9 10z" fill="#2BB673"/><circle cx="15" cy="13" r="3" fill="#F6B042"/><circle cx="33" cy="9" r="3" fill="#F6B042"/><circle cx="24" cy="7" r="3" fill="#F6B042"/></svg>`},
+  fruit:{nm:'硕果',sub:'95 分',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><path d="M24 33V16" stroke="#2BB673" stroke-width="2.4" stroke-linecap="round"/><path d="M24 23c-6-1-9-5-9-10 5 0 9 4 9 10z" fill="#2BB673"/><path d="M24 19c6-1 9-5 9-10-5 0-9 4-9 10z" fill="#2BB673"/><circle cx="20" cy="25" r="3" fill="#F4795B"/><circle cx="29" cy="27" r="3" fill="#F4795B"/><circle cx="24" cy="21" r="2.6" fill="#F6B042"/><circle cx="15" cy="13" r="2.6" fill="#F6B042"/><circle cx="33" cy="10" r="2.6" fill="#F6B042"/></svg>`},
+  tree:{nm:'大树',sub:'100 分',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><rect x="22.5" y="20" width="3" height="15" rx="1.5" fill="#8A6B4A"/><circle cx="24" cy="15" r="11" fill="#2BB673"/><circle cx="15" cy="18" r="6.5" fill="#2BB673"/><circle cx="33" cy="18" r="6.5" fill="#2BB673"/><circle cx="24" cy="9" r="5.5" fill="#37C987"/><circle cx="14" cy="12" r="2.2" fill="#F6B042"/><circle cx="34" cy="12" r="2.2" fill="#F6B042"/></svg>`}
 };
-const ORDER=['seed','sprout','potted','bloom'];
-const THRESH=[0,60,75,90];
+const ORDER=['seed','sprout','potted','bloom','fruit','tree'];
+const THRESH=[0,60,75,90,95,100];
 const INC_CATS=['工资','兼职'];
 const EXP_CATS=['房租','通勤','饮食','其他'];
 
@@ -347,6 +361,7 @@ function render(){
   document.getElementById('incTotal').textContent='合计 '+fmt(inc);
   document.getElementById('expTotal').textContent='合计 '+fmt(exp);
   const rentPct=inc>0?Math.round(state.expense['房租']/inc*100):0;
+  const saveRate=inc>0?(inc-exp)/inc:0;
   document.getElementById('rentNote').textContent='占收入 '+rentPct+'%';
 
   // ring
@@ -359,22 +374,23 @@ function render(){
   // unlock hint
   const st=stageOf(idx);
   let hint;
-  if(st<3){const need=THRESH[st+1]-idx;const nm=PLANTS[ORDER[st+1]].nm;hint='再 +'+need+' 分解锁 · '+nm;}
-  else hint='已开花，生活超棒 🌸';
+  if(st<ORDER.length-1){const need=THRESH[st+1]-idx;const nm=PLANTS[ORDER[st+1]].nm;hint='再 +'+need+' 分解锁 · '+nm;}
+  else hint='已长成大树，生活超棒 🌳';
   document.getElementById('unlockHint').textContent=hint;
 
-  // plant
-  document.getElementById('plantStageTxt').textContent='当前 · '+PLANTS[ORDER[st]].nm;
-  const pr=document.getElementById('plantRow');pr.innerHTML='';
-  ORDER.forEach((k,i)=>{
-    const active=i===st, locked=i>st;
-    const div=document.createElement('div');
-    div.className='stage'+(active?' active':'')+(locked?' locked':'');
-    div.innerHTML=`<div class="circle">${PLANTS[k].svg}</div><div class="nm">${PLANTS[k].nm}</div><div class="sub">${PLANTS[k].sub}</div>`;
-    pr.appendChild(div);
-  });
+  // plant (now inside hero, score-driven): 当前状态 + 旁边灰色下一级
+  const heroPlant=document.getElementById('heroPlant');
+  if(heroPlant){
+    heroPlant.innerHTML=PLANTS[ORDER[st]].svg;
+    document.getElementById('heroPlantName').textContent=PLANTS[ORDER[st]].nm;
+    const nextEl=document.getElementById('heroPlantNext');
+    if(st<ORDER.length-1){nextEl.style.display='';nextEl.innerHTML=PLANTS[ORDER[st+1]].svg;}
+    else{nextEl.style.display='none';nextEl.innerHTML='';}
+    document.getElementById('heroPlantSub').textContent='当前 · '+PLANTS[ORDER[st]].nm;
+  }
 
   // advice
+  document.getElementById('advMonth').textContent=(new Date().getMonth()+1)+'月';
   const sug=[];
   if(rentPct<30) sug.push('房租占收入 '+rentPct+'%，处于健康区间，这个月稳住了。');
   else sug.push('房租占收入 '+rentPct+'%，超过 30% 警戒线，可考虑合租或稍远一点的房源。');
@@ -436,19 +452,72 @@ function saveEntry(){
   save();render();closeModal();
 }
 
-/* wechat connect (mock) */
-function connectWechat(){
-  state.wechat=true;
-  if(!state.wxImported){                   // 首次连接：从微信帐单归类导入当月数据
-    state.wxImported=true;
-    state.income['工资']=9800;
-    state.income['兼职']=2300;
-    state.expense['房租']=3200;
-    state.expense['饮食']=1850;
-    state.expense['通勤']=420;
-    state.expense['其他']=600;
+/* 微信帐单：导出 CSV 后上传，按收入/支出自动归类（真正的本地解析，无需后端） */
+function importBill(input){
+  const f=input.files&&input.files[0]; if(!f){input.value='';return;}
+  const name=(f.name||'').toLowerCase();
+  if(!name.endsWith('.csv')){alert('目前仅支持 CSV 格式。\n请在微信支付 → 钱包 → 账单 → 导出帐单，选择「用于个人对账」的 CSV 文件。');input.value='';return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const buf=e.target.result;
+    const text=decodeText(buf);
+    const data=parseWechatCSV(text);
+    if(data.count===0){alert('没有识别到账单数据，请确认上传的是微信导出的 CSV 文件。');input.value='';return;}
+    state.income=data.income;
+    state.expense=data.expense;
+    state.wechat=true; state.wxImported=true;
+    save();render();
+    input.value='';
+  };
+  reader.readAsArrayBuffer(f);
+}
+function decodeText(buf){
+  let t=new TextDecoder('utf-8',{fatal:false}).decode(new Uint8Array(buf));
+  if(/�/.test(t)) t=new TextDecoder('gbk',{fatal:false}).decode(new Uint8Array(buf));
+  return t;
+}
+function splitCSV(line){
+  const out=[]; let cur=''; let q=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(ch==='"'){ if(q&&line[i+1]==='"'){cur+='"';i++;} else q=!q; }
+    else if(ch===','&&!q){out.push(cur);cur='';}
+    else cur+=ch;
   }
-  save();render();
+  out.push(cur); return out;
+}
+function parseWechatCSV(text){
+  const lines=text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l);
+  let hIdx=-1;
+  for(let i=0;i<lines.length;i++){ if(/交易时间|收\/支|金额/.test(lines[i])){hIdx=i;break;} }
+  const income={工资:0,兼职:0}, expense={房租:0,通勤:0,饮食:0,其他:0};
+  if(hIdx<0) return {income,expense,count:0};
+  const head=splitCSV(lines[hIdx]); const ci={};
+  head.forEach((h,j)=>{ci[h.trim()]=j;});
+  const iType=ci['收/支']!==undefined?ci['收/支']:-1;
+  const iAmt=ci['金额(元)']!==undefined?ci['金额(元)']:(ci['金额']!==undefined?ci['金额']:-1);
+  const iWho=ci['交易对方']!==undefined?ci['交易对方']:(ci['商品']!==undefined?ci['商品']:(ci['交易分类']!==undefined?ci['交易分类']:-1));
+  let count=0;
+  for(let i=hIdx+1;i<lines.length;i++){
+    const c=splitCSV(lines[i]); if(c.length<2) continue;
+    const type=iType>=0?c[iType]:'';
+    const amt=parseFloat(String(iAmt>=0?c[iAmt]:'').replace(/[^\d.]/g,''));
+    if(!isFinite(amt)||amt<=0) continue;
+    const who=iWho>=0?(c[iWho]||''):'';
+    if(type.indexOf('收入')>=0){ income[classifyIncome(who)]+=amt; count++; }
+    else if(type.indexOf('支出')>=0){ expense[classifyExpense(who)]+=amt; count++; }
+  }
+  return {income,expense,count};
+}
+function classifyIncome(who){
+  if(/兼职|劳务|稿费|外快|接单|打赏/.test(who)) return '兼职';
+  return '工资';
+}
+function classifyExpense(who){
+  if(/房租|物业|房东|公寓|小区/.test(who)) return '房租';
+  if(/餐饮|美食|外卖|咖啡|餐厅|饭店|食堂|小吃|奶茶|生鲜|超市/.test(who)) return '饮食';
+  if(/地铁|公交|滴滴|打车|出租|加油|停车|高铁|火车|机票|单车|网约车|加油卡/.test(who)) return '通勤';
+  return '其他';
 }
 
 render();
