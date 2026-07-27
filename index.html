@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="theme-color" content="#FFF6EC" />
+<title>小确幸 · 打工人生活工作台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF6EC; --ink:#2D2A26; --muted:#938A7E; --line:#F0E6D8;
+    --green:#2BB673; --green-d:#1E7A4F; --green-bg:#E6F7EF;
+    --coral:#F4795B; --coral-d:#C9533C; --coral-bg:#F4795B;
+    --amber:#F6B042; --teal:#4CC4B0; --lav:#B39DDB;
+    --card:#FFFFFF; --shadow:0 2px 8px rgba(45,42,38,.06);
+    --wx:#09BB07;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:"Noto Sans SC",-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;
+    background:var(--cream); color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{max-width:1040px;margin:0 auto;padding:16px 16px 120px;}
+  /* ---- header ---- */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 4px 18px;position:sticky;top:0;background:var(--cream);z-index:5;
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand .logo{width:38px;height:38px;border-radius:11px;background:var(--green);display:flex;align-items:center;justify-content:center;}
+  .brand .logo svg{width:22px;height:22px;}
+  .brand .name{font-size:18px;font-weight:700;}
+  .brand .tag{font-size:11px;color:var(--muted);}
+  .topright{display:flex;align-items:center;gap:10px;}
+  .bell{width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;}
+  .avatar{width:40px;height:40px;border-radius:20px;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;}
+  .wx-pill{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:500;padding:6px 10px;border-radius:14px;background:#fff;border:1px solid var(--line);color:var(--muted);}
+  .wx-pill.on{background:rgba(9,187,7,.1);border-color:var(--wx);color:var(--wx);}
+  /* ---- section ---- */
+  .section{margin-bottom:18px;}
+  .sec-head{display:flex;align-items:center;justify-content:space-between;margin:2px 2px 10px;}
+  .sec-title{font-size:16px;font-weight:700;}
+  .sec-total{font-size:14px;font-weight:700;}
+  .sec-total.inc{color:var(--green);}
+  .sec-total.exp{color:var(--coral);}
+  /* ---- hero happiness ---- */
+  .hero{
+    background:linear-gradient(160deg,#2BB673,#23A865);border-radius:24px;padding:22px;
+    display:flex;flex-direction:column;align-items:center;color:#fff;box-shadow:0 8px 22px rgba(43,182,115,.28);
+    position:relative;overflow:hidden;
+  }
+  .hero .h-top{width:100%;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+  .hero .h-label{font-size:14px;font-weight:500;color:#E4F7EC;}
+  .hero .badge{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.18);padding:5px 10px;border-radius:12px;font-size:12px;font-weight:600;}
+  .hero .ring{position:relative;width:180px;height:180px;}
+  .hero .ring svg{width:100%;height:100%;}
+  .hero .ring .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .hero .ring .num b{font-size:46px;font-weight:900;line-height:1;}
+  .hero .ring .num span{font-size:13px;opacity:.85;margin-top:2px;}
+  .hero .hint{margin-top:10px;font-size:13px;font-weight:600;color:#E4F7EC;background:rgba(255,255,255,.12);padding:7px 14px;border-radius:14px;}
+  /* ---- grid ---- */
+  .grid{display:grid;grid-template-columns:1fr;gap:18px;}
+  @media(min-width:760px){
+    .grid{grid-template-columns:1.05fr .95fr;align-items:start;}
+    .col{display:flex;flex-direction:column;gap:18px;}
+  }
+  /* ---- cards ---- */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow);}
+  .inc-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .inc-card{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px;position:relative;}
+  .inc-card .ico{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .inc-card .ico.g{background:var(--green-bg);}
+  .inc-card .ico.p{background:#E2F4F0;}
+  .inc-card .col{display:flex;flex-direction:column;gap:3px;min-width:0;}
+  .inc-card .lbl{font-size:13px;color:var(--muted);}
+  .inc-card .val{font-size:21px;font-weight:700;}
+  .edit-btn{position:absolute;top:10px;right:10px;width:28px;height:28px;border-radius:8px;background:#F5F0E8;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;}
+  .edit-btn.coral{background:#fff;}
+  .edit-btn svg{width:14px;height:14px;}
+  /* ---- rent big ---- */
+  .rent{background:var(--coral);border-radius:20px;padding:18px;display:flex;align-items:center;justify-content:space-between;color:#fff;box-shadow:0 6px 16px rgba(244,121,91,.32);position:relative;}
+  .rent .l{display:flex;flex-direction:column;gap:8px;}
+  .rent .r-ico{width:40px;height:40px;border-radius:12px;background:#FF9C86;display:flex;align-items:center;justify-content:center;}
+  .rent .r-lbl{font-size:15px;font-weight:600;}
+  .rent .r{display:flex;flex-direction:column;gap:4px;align-items:flex-end;}
+  .rent .r-val{font-size:26px;font-weight:700;}
+  .rent .r-note{font-size:12px;color:#FFE3D8;}
+  .rent .edit-btn{top:12px;right:12px;background:#fff;}
+  /* ---- small expense ---- */
+  .exp-small{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:10px;}
+  .sm-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px;box-shadow:var(--shadow);}
+  .sm-card .dot{width:10px;height:10px;border-radius:3px;}
+  .sm-card .lbl{font-size:12px;color:var(--muted);}
+  .sm-card .val{font-size:17px;font-weight:700;}
+  /* ---- plant ---- */
+  .plant-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:4px;}
+  .stage{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;}
+  .stage .circle{width:56px;height:56px;border-radius:28px;background:#F2EDE4;display:flex;align-items:center;justify-content:center;}
+  .stage.active .circle{background:var(--green-bg);border:2px solid var(--green);}
+  .stage .circle svg{width:46px;height:46px;}
+  .stage .nm{font-size:12px;font-weight:600;color:#A99E8E;}
+  .stage.active .nm{color:var(--green);}
+  .stage .sub{font-size:10px;color:#C2B7A7;}
+  .stage.active .sub{color:var(--green);}
+  .stage.locked .circle{opacity:.85;}
+  /* ---- advice ---- */
+  .enc{display:flex;align-items:center;gap:10px;background:var(--green-bg);border-radius:14px;padding:13px 14px;margin-bottom:12px;}
+  .enc svg{width:22px;height:22px;flex-shrink:0;}
+  .enc p{margin:0;font-size:13px;font-weight:600;color:var(--green-d);line-height:1.5;}
+  .sug{display:flex;gap:10px;align-items:flex-start;margin-bottom:11px;font-size:13px;color:#5A5249;line-height:1.5;}
+  .sug svg{width:18px;height:18px;flex-shrink:0;margin-top:1px;}
+  /* ---- wechat card ---- */
+  .wx-card{display:flex;flex-direction:column;gap:12px;}
+  .wx-top{display:flex;align-items:center;gap:12px;}
+  .wx-ico{width:40px;height:40px;border-radius:10px;background:var(--wx);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .wx-top .t{display:flex;flex-direction:column;gap:3px;}
+  .wx-top .t b{font-size:15px;}
+  .wx-top .t span{font-size:12px;color:var(--muted);}
+  .wx-status{margin-left:auto;font-size:12px;font-weight:600;color:#A89C8C;background:#F5F0E8;padding:5px 10px;border-radius:12px;}
+  .wx-status.on{color:var(--wx);background:rgba(9,187,7,.1);}
+  .wx-btn{height:44px;border-radius:12px;background:var(--wx);color:#fff;border:none;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit;}
+  /* ---- add button ---- */
+  .add-btn{display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 12px;border-radius:15px;background:#fff;border:1.5px solid var(--green);color:var(--green);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+  /* ---- modal ---- */
+  .mask{position:fixed;inset:0;background:rgba(30,27,23,.55);display:none;z-index:20;align-items:flex-end;justify-content:center;}
+  .mask.show{display:flex;}
+  .sheet{background:#fff;width:100%;max-width:460px;border-radius:24px 24px 0 0;padding:14px 20px 24px;animation:up .25s ease;}
+  @media(min-width:760px){.mask{align-items:center;}.sheet{border-radius:24px;}}
+  @keyframes up{from{transform:translateY(40px);opacity:.4}to{transform:translateY(0);opacity:1}}
+  .sheet .handle{width:36px;height:5px;border-radius:3px;background:#E2D9CC;margin:0 auto 14px;}
+  .sheet h3{margin:0 0 14px;font-size:18px;font-weight:700;}
+  .toggle{display:flex;background:#F5F0E8;border-radius:22px;padding:4px;margin-bottom:16px;}
+  .toggle button{flex:1;height:36px;border:none;background:transparent;border-radius:18px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;font-family:inherit;}
+  .toggle button.on{background:var(--green);color:#fff;}
+  .amt{text-align:center;margin-bottom:16px;}
+  .amt label{font-size:12px;color:var(--muted);}
+  .amt .big{font-size:38px;font-weight:900;margin-top:4px;}
+  .amt input{border:none;background:transparent;width:100%;text-align:center;font-size:34px;font-weight:900;color:var(--ink);font-family:inherit;outline:none;}
+  .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+  .chip{height:40px;border-radius:12px;background:#F5F0E8;border:1.5px solid transparent;font-size:13px;font-weight:600;color:#5A5249;cursor:pointer;font-family:inherit;}
+  .chip.on{background:var(--green-bg);border-color:var(--green);color:var(--green-d);}
+  .date-row{display:flex;align-items:center;gap:10px;background:#F8F4EC;border-radius:12px;padding:0 14px;height:46px;margin-bottom:18px;}
+  .date-row svg{width:18px;height:18px;}
+  .date-row input{border:none;background:transparent;flex:1;font-size:14px;color:var(--ink);font-family:inherit;outline:none;}
+  .save{width:100%;height:50px;border-radius:14px;background:var(--green);color:#fff;border:none;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit;}
+  .close-x{position:absolute;}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- header -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo"><svg viewBox="0 0 24 24" fill="none"><path d="M9 21V11M9 16h6M15 21V11M19 21v-6M22 21v-3" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div>
+        <div class="name">小确幸</div>
+        <div class="tag">打工人生活工作台</div>
+      </div>
+    </div>
+    <div class="topright">
+      <div class="wx-pill" id="wxPill"><span id="wxPillTxt">微信未连接</span></div>
+      <div class="bell"><svg viewBox="0 0 24 24" fill="none" stroke="#8A7A66" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+      <div class="avatar">林</div>
+    </div>
+  </div>
+
+  <!-- hero happiness index -->
+  <div class="section">
+    <div class="hero">
+      <div class="h-top">
+        <div class="h-label">本月幸福指数</div>
+        <div class="badge" id="deltaBadge">较上月 +0</div>
+      </div>
+      <div class="ring">
+        <svg viewBox="0 0 180 180" fill="none">
+          <circle cx="90" cy="90" r="74" stroke="#fff" stroke-opacity="0.25" stroke-width="14"/>
+          <circle id="ringFg" cx="90" cy="90" r="74" stroke="#fff" stroke-width="14" stroke-linecap="round" transform="rotate(-90 90 90)"/>
+        </svg>
+        <div class="num"><b id="idxNum">0</b><span>/ 100</span></div>
+      </div>
+      <div class="hint" id="unlockHint">—</div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- LEFT COLUMN -->
+    <div class="col">
+      <!-- income -->
+      <div class="section">
+        <div class="sec-head">
+          <div class="sec-title">本月收入</div>
+          <button class="add-btn" onclick="openModal('inc')"><svg viewBox="0 0 24 24" fill="none" stroke="#2BB673" stroke-width="2.4" stroke-linecap="round" width="14" height="14"><path d="M12 5v14M5 12h14"/></svg>记一笔</button>
+        </div>
+        <div class="inc-row">
+          <div class="inc-card">
+            <div class="ico g"><svg viewBox="0 0 24 24" fill="none" stroke="#2BB673" stroke-width="2" width="18" height="18"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg></div>
+            <div class="col"><div class="lbl">工资收入</div><div class="val" id="v-salary">¥0</div></div>
+            <button class="edit-btn" onclick="openEdit('工资')"><svg viewBox="0 0 24 24" fill="none" stroke="#A89C8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+          </div>
+          <div class="inc-card">
+            <div class="ico p"><svg viewBox="0 0 24 24" fill="none" stroke="#1FAE8B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg></div>
+            <div class="col"><div class="lbl">兼职收入</div><div class="val" id="v-part">¥0</div></div>
+            <button class="edit-btn" onclick="openEdit('兼职')"><svg viewBox="0 0 24 24" fill="none" stroke="#A89C8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+          </div>
+        </div>
+        <div class="sec-head" style="margin-top:8px;"><div></div><div class="sec-total inc" id="incTotal">合计 ¥0</div></div>
+      </div>
+
+      <!-- expense -->
+      <div class="section">
+        <div class="sec-head">
+          <div class="sec-title">本月支出</div>
+          <div></div>
+        </div>
+        <div class="rent">
+          <div class="l">
+            <div class="r-ico"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" width="20" height="20"><path d="M4 10l8-6 8 6"/><path d="M6 10v9h12v-9"/><path d="M10 19v-5h4v5"/></svg></div>
+            <div class="r-lbl">房租</div>
+          </div>
+          <div class="r">
+            <div class="r-val" id="v-rent">¥0</div>
+            <div class="r-note" id="rentNote">占收入 0%</div>
+          </div>
+          <button class="edit-btn coral" onclick="openEdit('房租')"><svg viewBox="0 0 24 24" fill="none" stroke="#C9533C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button>
+        </div>
+        <div class="exp-small">
+          <div class="sm-card"><div class="dot" style="background:var(--amber)"></div><div class="lbl">通勤</div><div class="val" id="v-commute">¥0</div><button class="edit-btn" style="top:8px;right:8px;" onclick="openEdit('通勤')"><svg viewBox="0 0 24 24" fill="none" stroke="#A89C8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button></div>
+          <div class="sm-card"><div class="dot" style="background:var(--teal)"></div><div class="lbl">饮食</div><div class="val" id="v-food">¥0</div><button class="edit-btn" style="top:8px;right:8px;" onclick="openEdit('饮食')"><svg viewBox="0 0 24 24" fill="none" stroke="#A89C8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button></div>
+          <div class="sm-card"><div class="dot" style="background:var(--lav)"></div><div class="lbl">其他</div><div class="val" id="v-other">¥0</div><button class="edit-btn" style="top:8px;right:8px;" onclick="openEdit('其他')"><svg viewBox="0 0 24 24" fill="none" stroke="#A89C8C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></button></div>
+        </div>
+        <div class="sec-head" style="margin-top:8px;"><div></div><div class="sec-total exp" id="expTotal">合计 ¥0</div></div>
+      </div>
+
+      <!-- wechat -->
+      <div class="section">
+        <div class="card wx-card">
+          <div class="wx-top">
+            <div class="wx-ico"><svg viewBox="0 0 24 24" fill="#fff" width="24" height="24"><path d="M9 4C5.1 4 2 6.6 2 9.8c0 1.9 1 3.5 2.7 4.7L4 16.5l2.5-1.3c.8.2 1.6.3 2.5.3h.6a5 5 0 0 1-.2-1.3c0-3 2.9-5.4 6.5-5.4h.6C15.6 6.3 12.6 4 9 4z"/><path d="M22 14.5c0-2.6-2.6-4.7-5.8-4.7s-5.8 2.1-5.8 4.7 2.6 4.7 5.8 4.7c.7 0 1.4-.1 2-.3l1.9 1-.5-1.6c1.5-.9 2.4-2.2 2.4-3.8z"/></svg></div>
+            <div class="t"><b>微信帐单同步</b><span>关联后自动归类收入与支出</span></div>
+            <div class="wx-status" id="wxStatus">未连接</div>
+          </div>
+          <button class="wx-btn" id="wxBtn" onclick="connectWechat()">立即连接微信帐单</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="col">
+      <!-- plant -->
+      <div class="section">
+        <div class="card">
+          <div class="sec-head" style="margin-bottom:14px;">
+            <div class="sec-title">我的小植物</div>
+            <div style="font-size:13px;font-weight:600;color:var(--green);" id="plantStageTxt">当前 · —</div>
+          </div>
+          <div class="plant-row" id="plantRow"></div>
+        </div>
+      </div>
+
+      <!-- advice -->
+      <div class="section">
+        <div class="card">
+          <div class="sec-head" style="margin-bottom:14px;">
+            <div class="sec-title">本月建议与鼓励</div>
+            <div style="font-size:13px;color:var(--muted);">7月</div>
+          </div>
+          <div class="enc"><svg viewBox="0 0 24 24" fill="none" stroke="#2BB673" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9.5-9A5 5 0 0 1 12 6a5 5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/></svg><p id="encTxt">—</p></div>
+          <div id="sugList"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal -->
+<div class="mask" id="mask" onclick="if(event.target===this)closeModal()">
+  <div class="sheet">
+    <div class="handle"></div>
+    <h3 id="modalTitle">记一笔</h3>
+    <div class="toggle">
+      <button id="segInc" class="on" onclick="setType('inc')">收入</button>
+      <button id="segExp" onclick="setType('exp')">支出</button>
+    </div>
+    <div class="amt">
+      <label>金额</label>
+      <input id="amtInput" type="number" inputmode="decimal" placeholder="0" />
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="date-row">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#A89C8C" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+      <input id="dateInput" type="date" />
+    </div>
+    <button class="save" onclick="saveEntry()">保存</button>
+  </div>
+</div>
+
+<script>
+const PLANTS = {
+  seed:{nm:'种子',sub:'起始',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><path d="M24 33c-2 0-3-1.5-3-3 1.6 0 3 1.4 3 3z" fill="#C9BFB0"/><path d="M24 33c2 0 3-1.5 3-3-1.6 0-3 1.4-3 3z" fill="#C9BFB0"/></svg>`},
+  sprout:{nm:'嫩芽',sub:'60 分',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><path d="M24 33V20" stroke="#2BB673" stroke-width="2.4" stroke-linecap="round"/><path d="M24 26c-5-1-8-4-8-8 4 0 8 3 8 8z" fill="#2BB673"/><path d="M24 23c5-1 8-4 8-8-4 0-8 3-8 8z" fill="#2BB673"/></svg>`},
+  potted:{nm:'小盆栽',sub:'75 分',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><path d="M24 33V18" stroke="#2BB673" stroke-width="2.4" stroke-linecap="round"/><path d="M24 24c-6-1-9-5-9-10 5 0 9 4 9 10z" fill="#2BB673"/><path d="M24 20c6-1 9-5 9-10-5 0-9 4-9 10z" fill="#2BB673"/><path d="M24 28c-4 0-6-3-6-6 3 0 6 2 6 6z" fill="#2BB673"/><path d="M24 28c4 0 6-3 6-6-3 0-6 2-6 6z" fill="#2BB673"/></svg>`},
+  bloom:{nm:'开花',sub:'90 分',svg:`<svg viewBox="0 0 48 48"><path d="M17 35h14l-1.6 8H18.6z" fill="#C9A27A"/><rect x="16" y="33" width="16" height="3" rx="1.5" fill="#B98C63"/><path d="M24 33V16" stroke="#2BB673" stroke-width="2.4" stroke-linecap="round"/><path d="M24 23c-6-1-9-5-9-10 5 0 9 4 9 10z" fill="#2BB673"/><path d="M24 19c6-1 9-5 9-10-5 0-9 4-9 10z" fill="#2BB673"/><circle cx="15" cy="13" r="3" fill="#F6B042"/><circle cx="33" cy="9" r="3" fill="#F6B042"/><circle cx="24" cy="7" r="3" fill="#F6B042"/></svg>`}
+};
+const ORDER=['seed','sprout','potted','bloom'];
+const THRESH=[0,60,75,90];
+const INC_CATS=['工资','兼职'];
+const EXP_CATS=['房租','通勤','饮食','其他'];
+
+let state=load()||{
+  income:{工资:9800,兼职:2300},
+  expense:{房租:3200,通勤:420,饮食:1850,其他:600},
+  wechat:false,
+  lastIndex:66
+};
+
+function load(){try{return JSON.parse(localStorage.getItem('xqx_state'));}catch(e){return null;}}
+function save(){localStorage.setItem('xqx_state',JSON.stringify(state));}
+
+function totals(){
+  const inc=Object.values(state.income).reduce((a,b)=>a+b,0);
+  const exp=Object.values(state.expense).reduce((a,b)=>a+b,0);
+  return {inc,exp};
+}
+function happiness(){
+  const {inc,exp}=totals();
+  const saveRate=inc>0?(inc-exp)/inc:0;
+  const rentBurden=inc>0?state.expense['房租']/inc:0;
+  let idx=45+saveRate*55-Math.max(0,rentBurden-0.3)*70;
+  return Math.max(0,Math.min(100,Math.round(idx)));
+}
+function stageOf(idx){let s=0;for(let i=0;i<THRESH.length;i++)if(idx>=THRESH[i])s=i;return s;}
+function fmt(n){return '¥'+Math.round(n).toLocaleString('zh-CN');}
+
+function render(){
+  const {inc,exp}=totals();
+  const idx=happiness();
+  document.getElementById('v-salary').textContent=fmt(state.income['工资']);
+  document.getElementById('v-part').textContent=fmt(state.income['兼职']);
+  document.getElementById('v-rent').textContent=fmt(state.expense['房租']);
+  document.getElementById('v-commute').textContent=fmt(state.expense['通勤']);
+  document.getElementById('v-food').textContent=fmt(state.expense['饮食']);
+  document.getElementById('v-other').textContent=fmt(state.expense['其他']);
+  document.getElementById('incTotal').textContent='合计 '+fmt(inc);
+  document.getElementById('expTotal').textContent='合计 '+fmt(exp);
+  const rentPct=inc>0?Math.round(state.expense['房租']/inc*100):0;
+  document.getElementById('rentNote').textContent='占收入 '+rentPct+'%';
+
+  // ring
+  const C=2*Math.PI*74;
+  document.getElementById('ringFg').setAttribute('stroke-dasharray',(C*idx/100)+' '+(C-C*idx/100));
+  document.getElementById('idxNum').textContent=idx;
+  const d=idx-state.lastIndex;
+  const badge=document.getElementById('deltaBadge');
+  badge.textContent='较上月 '+(d>=0?'+':'')+d;
+  // unlock hint
+  const st=stageOf(idx);
+  let hint;
+  if(st<3){const need=THRESH[st+1]-idx;const nm=PLANTS[ORDER[st+1]].nm;hint='再 +'+need+' 分解锁 · '+nm;}
+  else hint='已开花，生活超棒 🌸';
+  document.getElementById('unlockHint').textContent=hint;
+
+  // plant
+  document.getElementById('plantStageTxt').textContent='当前 · '+PLANTS[ORDER[st]].nm;
+  const pr=document.getElementById('plantRow');pr.innerHTML='';
+  ORDER.forEach((k,i)=>{
+    const active=i===st, locked=i>st;
+    const div=document.createElement('div');
+    div.className='stage'+(active?' active':'')+(locked?' locked':'');
+    div.innerHTML=`<div class="circle">${PLANTS[k].svg}</div><div class="nm">${PLANTS[k].nm}</div><div class="sub">${PLANTS[k].sub}</div>`;
+    pr.appendChild(div);
+  });
+
+  // advice
+  const sug=[];
+  if(rentPct<30) sug.push('房租占收入 '+rentPct+'%，处于健康区间，这个月稳住了。');
+  else sug.push('房租占收入 '+rentPct+'%，超过 30% 警戒线，可考虑合租或稍远一点的房源。');
+  if(state.expense['饮食']>1500) sug.push('饮食支出 '+fmt(state.expense['饮食'])+' 偏高，每周自己下厨 3 顿，预计省下 ¥300。');
+  if(saveRate>0.4) sug.push('储蓄率 '+Math.round(saveRate*100)+'%，攒钱节奏很棒，继续保持。');
+  if(d>=0) sug.push('本月幸福指数上涨 '+d+' 点，'+hint.replace('再 +','离「').replace(' 分解锁','」还差')+'，加油！');
+  else sug.push('本月指数略降 '+Math.abs(d)+' 点，调整一下开支结构很快就能回来。');
+  document.getElementById('encTxt').textContent = d>=0
+    ? ('你本月幸福指数上涨 '+d+' 点，'+hint+'，继续保持！')
+    : ('本月指数略降 '+Math.abs(d)+' 点，别灰心，调一调开支就能回升。');
+  const sl=document.getElementById('sugList');sl.innerHTML='';
+  sug.slice(0,3).forEach(t=>{
+    const d2=document.createElement('div');d2.className='sug';
+    d2.innerHTML=`<svg viewBox="0 0 24 24" fill="none" stroke="#2BB673" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-11"/></svg><div>${t}</div>`;
+    sl.appendChild(d2);
+  });
+
+  // wechat
+  const wp=document.getElementById('wxPill'),ws=document.getElementById('wxStatus'),wb=document.getElementById('wxBtn');
+  if(state.wechat){wp.classList.add('on');wp.querySelector('#wxPillTxt').textContent='微信已同步';ws.classList.add('on');ws.textContent='已同步';wb.textContent='已连接 · 重新同步';}
+  else{wp.classList.remove('on');wp.querySelector('#wxPillTxt').textContent='微信未连接';ws.classList.remove('on');ws.textContent='未连接';wb.textContent='立即连接微信帐单';}
+}
+
+/* ---- modal ---- */
+let curType='inc', modalMode='add';
+function cats(){return curType==='inc'?INC_CATS:EXP_CATS;}
+function renderChips(){
+  const c=document.getElementById('chips');c.innerHTML='';
+  cats().forEach((nm,i)=>{
+    const b=document.createElement('button');b.className='chip'+(i===0?' on':'');b.textContent=nm;
+    b.onclick=()=>{[...c.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');};
+    c.appendChild(b);
+  });
+}
+function setType(t){curType=t;document.getElementById('segInc').classList.toggle('on',t==='inc');document.getElementById('segExp').classList.toggle('on',t==='exp');renderChips();}
+function openModal(t){modalMode='add';curType=t;setType(t);document.getElementById('modalTitle').textContent='记一笔';document.getElementById('amtInput').value='';document.getElementById('dateInput').value=new Date().toISOString().slice(0,10);renderChips();document.getElementById('mask').classList.add('show');}
+function openEdit(cat){
+  modalMode='edit';
+  const isInc=INC_CATS.includes(cat);curType=isInc?'inc':'exp';setType(curType);
+  document.getElementById('modalTitle').textContent='修改 · '+cat;
+  document.getElementById('amtInput').value=state[isInc?'income':'expense'][cat];
+  document.getElementById('dateInput').value=new Date().toISOString().slice(0,10);
+  // select chip
+  const chips=document.getElementById('chips');[...chips.children].forEach(b=>b.classList.toggle('on',b.textContent===cat));
+  document.getElementById('mask').classList.add('show');
+}
+function closeModal(){document.getElementById('mask').classList.remove('show');}
+function saveEntry(){
+  const amt=parseFloat(document.getElementById('amtInput').value);
+  if(!amt||amt<=0){document.getElementById('amtInput').focus();return;}
+  const cat=[...document.getElementById('chips').children].find(b=>b.classList.contains('on')).textContent;
+  if(curType==='inc'){
+    if(modalMode==='edit') state.income[cat]=amt;          // 修改模式：直接设为新值
+    else state.income[cat]=(state.income[cat]||0)+amt;     // 记一笔：累加新一笔交易
+  } else {
+    if(modalMode==='edit') state.expense[cat]=amt;
+    else state.expense[cat]=(state.expense[cat]||0)+amt;
+  }
+  save();render();closeModal();
+}
+
+/* wechat connect (mock) */
+function connectWechat(){
+  state.wechat=true;
+  if(!state.wxImported){                   // 首次连接：从微信帐单归类导入当月数据
+    state.wxImported=true;
+    state.income['工资']=9800;
+    state.income['兼职']=2300;
+    state.expense['房租']=3200;
+    state.expense['饮食']=1850;
+    state.expense['通勤']=420;
+    state.expense['其他']=600;
+  }
+  save();render();
+}
+
+render();
+</script>
+</body>
+</html>
